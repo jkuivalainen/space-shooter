@@ -10,3 +10,8 @@ export_presets.cfg
 
 # Claude local context
 claude.md
+.mcp.json
+.claude/
+
+# MCP / editor addons (local tooling, not game code)
+addons/
