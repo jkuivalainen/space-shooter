@@ -1,17 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://main1"]
+[gd_scene format=3 uid="uid://main1"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
-[ext_resource type="PackedScene" path="res://ui/hud.tscn" id="3_hud"]
-[ext_resource type="Script" path="res://scripts/enemy_spawner.gd" id="4_spawner"]
+[ext_resource type="Script" uid="uid://b88npcq5hudvt" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="PackedScene" uid="uid://player1" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://hud1" path="res://ui/hud.tscn" id="3_hud"]
+[ext_resource type="Script" uid="uid://q5t1urqglx4j" path="res://scripts/enemy_spawner.gd" id="4_spawner"]
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" unique_id=1184474881]
 script = ExtResource("1_main")
 
-[node name="Player" parent="." instance=ExtResource("2_player")]
+[node name="Player" parent="." unique_id=2098064150 instance=ExtResource("2_player")]
 position = Vector2(640, 360)
 
-[node name="EnemySpawner" type="Node" parent="."]
+[node name="EnemySpawner" type="Node" parent="." unique_id=1765075842]
 script = ExtResource("4_spawner")
 
-[node name="HUD" parent="." instance=ExtResource("3_hud")]
+[node name="HUD" parent="." unique_id=751153072 instance=ExtResource("3_hud")]

@@ -1,10 +1,12 @@
 # enemy.gd
 # Red square enemy that chases the player at a fixed speed.
 # On contact with the player it triggers game over; on bullet hit it dies.
+# On death, drops an EnemyBody at its position for the player to assimilate.
 
 extends CharacterBody2D
 
 const SPEED: float = 180.0
+const BODY_SCENE: PackedScene = preload("res://scenes/enemy_body.tscn")
 
 # Cached reference to the player node — resolved once in _ready.
 var _player: Node = null
@@ -38,5 +40,8 @@ func _physics_process(_delta: float) -> void:
 
 
 func take_hit() -> void:
-	# Phase 2: drop a body here. For now, just remove the enemy.
+	# Drop a body at the death position for the player to assimilate.
+	var body := BODY_SCENE.instantiate()
+	body.global_position = global_position
+	get_tree().current_scene.add_child(body)
 	queue_free()

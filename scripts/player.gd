@@ -1,10 +1,13 @@
 # player.gd
 # Controls the player: 8-directional movement, mouse/stick aiming, and auto-fire.
+# Phase 2: assimilating enemy bodies adjusts _speed and _fire_rate, and bodies
+# orbit the player as a shield layer.
 
 extends CharacterBody2D
 
-const SPEED: float = 160.0
-const FIRE_RATE: float = 0.2  # seconds between shots
+# Live stats — modified up/down by assimilate / lose_body.
+var _speed: float = 160.0
+var _fire_rate: float = 0.2
 
 # Preload bullet scene so we can instantiate it without a path string at runtime.
 @onready var _bullet_scene: PackedScene = preload("res://scenes/bullet.tscn")
@@ -12,6 +15,9 @@ const FIRE_RATE: float = 0.2  # seconds between shots
 
 var _fire_timer: float = 0.0
 var _dead: bool = false
+
+# Assimilated bodies, in assimilation order — index determines hex orbit position.
+var _bodies: Array[Node] = []
 
 
 func _ready() -> void:
@@ -34,7 +40,7 @@ func _physics_process(_delta: float) -> void:
 
 	# Build movement vector from keyboard (WASD) or left stick.
 	var input := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = input.normalized() * SPEED
+	velocity = input.normalized() * _speed
 	move_and_slide()
 
 	# Keep player inside the viewport.
@@ -64,7 +70,7 @@ func _handle_shooting(delta: float) -> void:
 	# Shoot on left mouse button or right trigger (mapped via "shoot" action).
 	if Input.is_action_pressed("shoot"):
 		_fire()
-		_fire_timer = FIRE_RATE
+		_fire_timer = _fire_rate
 
 
 func _fire() -> void:
@@ -79,3 +85,34 @@ func _fire() -> void:
 func _on_game_over(_elapsed: float) -> void:
 	_dead = true
 	velocity = Vector2.ZERO
+
+
+# Attach a newly dropped body to the player's hex orbit.
+# The body is reparented here so it travels with the player and acts as a shield.
+func assimilate(body: Node) -> void:
+	_bodies.append(body)
+	var index := _bodies.size() - 1
+	# Expand to a new ring every 6 bodies; each ring is 28 px further out.
+	var ring: int = floori(float(index) / 6.0)
+	var radius := 40.0 + float(ring) * 28.0
+	var angle := deg_to_rad((index % 6) * 60.0)
+
+	# Reparent without keeping global transform — we'll set position explicitly.
+	body.reparent(self, false)
+	body.position = Vector2(radius, 0.0).rotated(angle)
+
+	# Turn yellow to signal assimilation.
+	var poly := body.get_node("Polygon2D")
+	poly.color = Color(1.0, 1.0, 0.0, 1.0)
+
+	# Faster shooting, slower movement — clamped so they don't hit degenerate values.
+	_fire_rate = max(0.05, _fire_rate - 0.04)
+	_speed = max(60.0, _speed - 15.0)
+
+
+# Called by enemy_body.gd when an enemy destroys one of the orbiting bodies.
+# Reverses the stat deltas applied during assimilation.
+func lose_body(body: Node) -> void:
+	_bodies.erase(body)
+	_fire_rate += 0.04
+	_speed += 15.0
