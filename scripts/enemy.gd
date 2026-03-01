@@ -4,7 +4,7 @@
 
 extends CharacterBody2D
 
-const SPEED: float = 120.0
+const SPEED: float = 180.0
 
 # Cached reference to the player node — resolved once in _ready.
 var _player: Node = null

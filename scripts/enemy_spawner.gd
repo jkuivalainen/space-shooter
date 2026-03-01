@@ -7,7 +7,7 @@ extends Node
 const SPAWN_INTERVAL_START: float = 2.0
 const SPAWN_INTERVAL_MIN: float = 0.3
 # Reduce interval by this much for every 10 seconds survived.
-const DIFFICULTY_STEP: float = 0.05
+const DIFFICULTY_STEP: float = 0.15
 
 @onready var _enemy_scene: PackedScene = preload("res://scenes/enemy.tscn")
 

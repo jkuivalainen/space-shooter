@@ -15,6 +15,7 @@ var _dead: bool = false
 
 
 func _ready() -> void:
+	add_to_group("player")
 	GameManager.game_over.connect(_on_game_over)
 
 
