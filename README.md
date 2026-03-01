@@ -30,6 +30,7 @@ PLAN.md      Living development plan
 
 ## Key Design Notes
 
+- **Speeds:** player 160, enemies 180 — enemies are slightly faster to maintain pressure
 - **No pathfinding:** enemies use a direct normalized-vector chase
 - **Difficulty:** spawn interval decreases by 0.15s per 10 seconds survived (floor: 0.3s, max rate reached ~11s in)
 - **Collision layers:** Player = layer 1, Enemies = layer 2, Bullets = layer 4

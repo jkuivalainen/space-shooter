@@ -3,7 +3,7 @@
 
 extends CharacterBody2D
 
-const SPEED: float = 250.0
+const SPEED: float = 160.0
 const FIRE_RATE: float = 0.2  # seconds between shots
 
 # Preload bullet scene so we can instantiate it without a path string at runtime.
