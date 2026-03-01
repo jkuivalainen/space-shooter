@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://hud1"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="TimerLabel" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -80.0
+offset_top = 16.0
+offset_right = 80.0
+offset_bottom = 56.0
+horizontal_alignment = 1
+text = "00:00"
+theme_override_font_sizes/font_size = 32
+
+[node name="GameOverOverlay" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverOverlay"]
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="GameOverOverlay/VBoxContainer"]
+text = "GAME OVER"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 64
+
+[node name="FinalTimeLabel" type="Label" parent="GameOverOverlay/VBoxContainer"]
+text = "Time: 00:00"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+
+[node name="RestartLabel" type="Label" parent="GameOverOverlay/VBoxContainer"]
+text = "Press Enter / Start to restart"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
