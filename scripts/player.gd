@@ -121,6 +121,8 @@ func assimilate(body: Node) -> bool:
 	# Reparent without keeping global transform; position is set in local space.
 	body.reparent(self, false)
 	body.position = _side_position(side)
+	# Rotate the body so its faces align with the hexagon side (normal angle).
+	body.rotation = PI / 6.0 + side * (PI / 3.0)
 
 	# Turn yellow to signal assimilation.
 	var poly := body.get_node("Polygon2D")

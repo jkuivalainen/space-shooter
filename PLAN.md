@@ -46,6 +46,8 @@ res://
 - Player touches body → assimilates to nearest free hexagon side (turns yellow); max 6 bodies
 - Each body: fire_rate -0.04s (min 0.05), speed -15 px/s (min 60)
 - Body hit by enemy → stat deltas reversed, body destroyed; full slot rejects pickup until freed
+- Assimilation retried every frame while player overlaps drop — snaps in immediately when a slot frees
+- Attached bodies rotated to align with their hexagon side
 
 ### Phase 3 — Polish
 - Particle effects, sound, screen shake
