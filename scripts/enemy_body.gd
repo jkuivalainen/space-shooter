@@ -17,8 +17,10 @@ func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("player"):
 		if _assimilated:
 			return
-		_assimilated = true
-		body.assimilate(self)
+		# assimilate() returns false if the nearest side is occupied — leave the
+		# body on the ground so the player can pick it up once a slot frees.
+		if body.assimilate(self):
+			_assimilated = true
 	elif body.is_in_group("enemies"):
 		# Only reverse stat bonuses if the player has already assimilated this body.
 		# An unassimilated body hasn't granted any bonus, so just destroy it silently.

@@ -16,8 +16,14 @@ var _fire_rate: float = 0.2
 var _fire_timer: float = 0.0
 var _dead: bool = false
 
-# Assimilated bodies, in assimilation order — index determines hex orbit position.
-var _bodies: Array[Node] = []
+# Hexagon geometry (circumradius 24 px, flat-top orientation).
+# Apothem = 24 * cos(30°) ≈ 20.785; body half-size = 12 → center sits flush against side.
+const HEX_APOTHEM := 20.785
+const BODY_HALF_SIZE := 12.0
+
+# One slot per hexagon side (0–5). null = empty. Index maps to the side whose outward
+# normal points at (index * 60°) in local space — i.e. side 0 is the right-facing side.
+var _bodies: Array = [null, null, null, null, null, null]
 
 
 func _ready() -> void:
@@ -87,19 +93,34 @@ func _on_game_over(_elapsed: float) -> void:
 	velocity = Vector2.ZERO
 
 
-# Attach a newly dropped body to the player's hex orbit.
-# The body is reparented here so it travels with the player and acts as a shield.
-func assimilate(body: Node) -> void:
-	_bodies.append(body)
-	var index := _bodies.size() - 1
-	# Expand to a new ring every 6 bodies; each ring is 28 px further out.
-	var ring: int = floori(float(index) / 6.0)
-	var radius := 40.0 + float(ring) * 28.0
-	var angle := deg_to_rad((index % 6) * 60.0)
+# Returns the index (0–5) of the hexagon side whose outward normal is closest to
+# the given world position. Side n owns the 60° arc from n*60° to (n+1)*60° in
+# local space; side normals sit at the midpoints (30°, 90°, …, 330°).
+func _nearest_side(world_pos: Vector2) -> int:
+	var local_dir := to_local(world_pos)
+	var angle := fposmod(local_dir.angle(), TAU)
+	return int(angle / (PI / 3.0)) % 6
 
-	# Reparent without keeping global transform — we'll set position explicitly.
+
+# Local-space attachment point for the centre of a body on the given side.
+func _side_position(side: int) -> Vector2:
+	# Normal direction is at the midpoint of the side's arc: 30° + side * 60°.
+	var normal_angle := PI / 6.0 + side * (PI / 3.0)
+	return Vector2.RIGHT.rotated(normal_angle) * (HEX_APOTHEM + BODY_HALF_SIZE)
+
+
+# Attempt to attach a dropped body to the nearest free hexagon side.
+# Returns true if accepted, false if the nearest slot is already occupied.
+# The caller should only mark the body as assimilated on a true return.
+func assimilate(body: Node) -> bool:
+	var side := _nearest_side(body.global_position)
+	if _bodies[side] != null:
+		return false  # slot taken — body stays on the ground
+
+	_bodies[side] = body
+	# Reparent without keeping global transform; position is set in local space.
 	body.reparent(self, false)
-	body.position = Vector2(radius, 0.0).rotated(angle)
+	body.position = _side_position(side)
 
 	# Turn yellow to signal assimilation.
 	var poly := body.get_node("Polygon2D")
@@ -108,13 +129,15 @@ func assimilate(body: Node) -> void:
 	# Faster shooting, slower movement — clamped so they don't hit degenerate values.
 	_fire_rate = max(0.05, _fire_rate - 0.04)
 	_speed = max(60.0, _speed - 15.0)
+	return true
 
 
-# Called by enemy_body.gd when an enemy destroys one of the orbiting bodies.
+# Called by enemy_body.gd when an enemy destroys one of the attached bodies.
 # Reverses the stat deltas applied during assimilation.
 func lose_body(body: Node) -> void:
-	_bodies.erase(body)
-	# Cap at base values so phantom increments (e.g. from future bugs) can't push
-	# stats above where they started.
+	var idx := _bodies.find(body)
+	if idx != -1:
+		_bodies[idx] = null
+	# Cap at base values so phantom increments can't push stats above their start.
 	_fire_rate = min(0.2, _fire_rate + 0.04)
 	_speed     = min(160.0, _speed + 15.0)

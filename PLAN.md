@@ -43,10 +43,9 @@ res://
 
 ### Phase 2 — Body Mechanic ✓
 - Enemy death → drops gray body (`enemy_body.tscn`)
-- Player touches body → assimilates (snaps to hex orbit, turns yellow)
+- Player touches body → assimilates to nearest free hexagon side (turns yellow); max 6 bodies
 - Each body: fire_rate -0.04s (min 0.05), speed -15 px/s (min 60)
-- Bodies orbit in rings of 6 at radius 40+28×ring px
-- Body hit by enemy → stat deltas reversed, body destroyed
+- Body hit by enemy → stat deltas reversed, body destroyed; full slot rejects pickup until freed
 
 ### Phase 3 — Polish
 - Particle effects, sound, screen shake
