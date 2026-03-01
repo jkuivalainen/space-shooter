@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 
 func _current_interval() -> float:
 	# Linear decrease: subtract DIFFICULTY_STEP per 10 seconds elapsed.
-	var reduction := floor(GameManager.elapsed_time / 10.0) * DIFFICULTY_STEP
+	var reduction: float = floor(GameManager.elapsed_time / 10.0) * DIFFICULTY_STEP
 	return max(SPAWN_INTERVAL_START - reduction, SPAWN_INTERVAL_MIN)
 
 

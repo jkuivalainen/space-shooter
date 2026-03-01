@@ -25,7 +25,7 @@ func _physics_process(_delta: float) -> void:
 		return
 
 	# Simple pursuit: move directly toward the player each frame.
-	var dir := (_player.global_position - global_position).normalized()
+	var dir: Vector2 = (_player.global_position - global_position).normalized()
 	velocity = dir * SPEED
 	move_and_slide()
 
