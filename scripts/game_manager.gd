@@ -7,7 +7,6 @@ extends Node
 enum State { PLAYING, GAME_OVER }
 
 signal game_over(elapsed: float)
-signal game_restarted
 
 var state: State = State.PLAYING
 var elapsed_time: float = 0.0

@@ -42,8 +42,6 @@ func _physics_process(_delta: float) -> void:
 
 
 func _handle_aim() -> void:
-	# Right stick takes priority when its magnitude exceeds the deadzone.
-	var stick := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	# Use axis 2/3 for right stick (Godot joypad axes: 2=RX, 3=RY).
 	var right_x := Input.get_joy_axis(0, JOY_AXIS_RIGHT_X)
 	var right_y := Input.get_joy_axis(0, JOY_AXIS_RIGHT_Y)

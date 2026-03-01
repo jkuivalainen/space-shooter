@@ -25,4 +25,4 @@ func _on_game_over(elapsed: float) -> void:
 # Converts seconds to MM:SS string.
 func _format_time(seconds: float) -> String:
 	var s := int(seconds)
-	return "%02d:%02d" % [s / 60, s % 60]
+	return "%02d:%02d" % [s / 60, s % 60]  # integer division is intentional here
