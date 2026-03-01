@@ -20,8 +20,10 @@ func _on_body_entered(body: Node) -> void:
 		_assimilated = true
 		body.assimilate(self)
 	elif body.is_in_group("enemies"):
-		# Find player to reverse the stat bonus, then remove this body.
-		var players := get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-			players[0].lose_body(self)
+		# Only reverse stat bonuses if the player has already assimilated this body.
+		# An unassimilated body hasn't granted any bonus, so just destroy it silently.
+		if _assimilated:
+			var players := get_tree().get_nodes_in_group("player")
+			if players.size() > 0:
+				players[0].lose_body(self)
 		queue_free()

@@ -114,5 +114,7 @@ func assimilate(body: Node) -> void:
 # Reverses the stat deltas applied during assimilation.
 func lose_body(body: Node) -> void:
 	_bodies.erase(body)
-	_fire_rate += 0.04
-	_speed += 15.0
+	# Cap at base values so phantom increments (e.g. from future bugs) can't push
+	# stats above where they started.
+	_fire_rate = min(0.2, _fire_rate + 0.04)
+	_speed     = min(160.0, _speed + 15.0)
