@@ -31,6 +31,6 @@ PLAN.md      Living development plan
 ## Key Design Notes
 
 - **No pathfinding:** enemies use a direct normalized-vector chase
-- **Difficulty:** spawn interval decreases by 0.05s per 10 seconds survived (floor: 0.3s)
+- **Difficulty:** spawn interval decreases by 0.15s per 10 seconds survived (floor: 0.3s, max rate reached ~11s in)
 - **Collision layers:** Player = layer 1, Enemies = layer 2, Bullets = layer 4
 - **Phase 2** will add the body-assimilation mechanic (speed/fire-rate trade-off)
